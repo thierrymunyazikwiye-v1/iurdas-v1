@@ -37,8 +37,7 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:6px 8px;b
 .tag{display:inline-block;padding:1px 8px;border-radius:99px;font-size:11px;background:var(--bd)}
 .fn{display:flex;gap:4px;align-items:stretch}.fn div{flex:1;background:var(--tl);color:#fff;padding:10px 6px;border-radius:6px;text-align:center;font-size:12px}.fn b{display:block;font-size:16px}
 .drop{border:2px dashed var(--ac);border-radius:12px;padding:26px;text-align:center}
-pre{white-space:pre-wrap;background:var(--bg);padding:10px;border-radius:8px;font-size:12px;margin:8px 0 0}
-.rep h3{margin:14px 0 4px;color:var(--ac2)}.rep p{margin:4px 0;max-width:80ch}
+pre{white-space:pre-wrap;background:var(--bg);padding:10px;border-radius:8px;font-size:12px;margin:8px 0 0}.rep h3{margin:14px 0 4px;color:var(--ac2)}.rep p{margin:4px 0;max-width:80ch}
 #toast{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--tl);color:#fff;padding:10px 14px;border-radius:8px;display:none;max-width:340px;z-index:9}
 .note{color:var(--mu);font-size:12px}
 #lg{position:fixed;inset:0;z-index:20;background:var(--bg);display:none;align-items:center;justify-content:center;padding:16px}body.lk #lg{display:flex}body.lk aside,body.lk main{display:none}#lg input{width:100%}</style></head><body class="lk"><div id="lg"><div class="c" style="max-width:420px;width:100%"><div style="text-align:center"><img id="lgi" alt="University of Rwanda logo" style="width:72px;height:72px;border-radius:50%;background:#fff"><h1 style="margin:8px 0 0">iURDAS</h1><div class="note">Integrated University of Rwanda Data Analytics System</div></div>
@@ -284,6 +283,19 @@ function resetIdle(){clearTimeout(idle);idle=setTimeout(()=>logout('Signed out a
 const lgDemo=()=>{$('#ld').innerHTML=U.filter(u=>u.a).map((u,i)=>`<button class="b g" onclick="$('#em').value=U[${U.indexOf(u)}].e">${esc(u.r)}${u.c?' '+esc(u.c):''}</button>`).join('')};
 function boot(){try{const t=localStorage.getItem('iurdas-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}$('#lgi').src=document.querySelector('.brand img').src;$('#th').textContent=$('#th2').textContent=thLabel();lgDemo();['click','keydown','touchstart'].forEach(v=>document.addEventListener(v,()=>{if(cu)resetIdle()}));try{const u=U.find(x=>x.e==sessionStorage.getItem('iurdas-sess')&&x.a);if(u){cu=u;signIn(u)}}catch(e){}}
 const admins=()=>U.filter(u=>u.r=='System Administrator'&&u.a).length;
+// Fetch users from Supabase and update your app's user list
+async function fetchSupabaseUsers() {
+  const { data, error } = await supabase.from('users').select('*');
+  if (error) {
+    console.error('Error fetching users from Supabase:', error.message);
+    return;
+  }
+  if (data && data.length > 0) {
+    // Maps Supabase users into your app's expected format
+    window.USERS = data.map(u => [u.name, u.email, u.role]);
+    if (typeof setU === 'function') setU(); // Re-renders your user table if function exists
+  }
+}
 function setU(i,k,v){const u=U[i];if((k=='a'&&!+v||k=='r'&&v!='System Administrator')&&u.r=='System Administrator'&&u.a&&admins()<=1)return toast('Keep at least one active System Administrator.');u[k]=k=='a'?+v:v;if(k=='r'&&LK(v)&&!u.c)u.c='CST';audit('Updated '+esc(u.e)+': '+k+' = '+esc(v));go()}
 function delU(i){const u=U[i];if(u==cu)return toast('You cannot remove your own account.');if(u.r=='System Administrator'&&admins()<=1)return toast('Keep at least one active System Administrator.');U.splice(i,1);audit('Removed '+esc(u.e));go()}
 function addU(){const n=$('#un').value.trim(),e=$('#ue').value.trim().toLowerCase();if(!n)return toast('Enter the full name.');if(!DOM.test(e))return toast('Only addresses ending in @ur.ac.rw are accepted.');if(U.some(x=>x.e==e))return toast('That user already exists.');U.push({n,e,r:$('#ur').value,c:LK($('#ur').value)?$('#uc').value:'',a:1});audit('Added '+esc(e)+' as '+esc($('#ur').value));go()}
@@ -310,4 +322,5 @@ function addM(){const n=$('#nm').value.trim();if(!n)return toast('Enter a module
 function nav(){$('#nav').innerHTML=MODS.filter(m=>can(m.id)).map(m=>`<button class="${m.id==view?'on':''}" onclick="view='${m.id}';go()"><span>${m.i}</span>${m.n}</button>`).join('')}
 function go(){if(LK(role))col=pc;$('#pcs').style.display=LK(role)&&isAdm()?'':'none';$('#role').style.display=isAdm()?'':'none';$('#who').textContent=cu?cu.n+' · '+cu.e+' · '+cu.r:'';$('#th').textContent=thLabel();if(!can(view))view=MODS.find(m=>can(m.id)).id;nav();const m=MODS.find(x=>x.id==view);$('#ttl').textContent=m.n;$('#sub').textContent=role+' · '+(P[role][view]>=3?'view, edit, export':P[role][view]==2?'view, edit':'view only');$('#v').innerHTML=(['sp','reg','hr','res','fin','spt','rep'].includes(view)?chips():'')+(MD[view]?mb(view):'')+V[view]()}
 $('#role').innerHTML=Object.keys(ROLES).map(r=>`<option>${r}</option>`).join('');$('#pcs').innerHTML=CO.map(c=>`<option>${c[0]}</option>`).join('');$('#pcs').value=pc;$('#pcs').onchange=e=>{pc=e.target.value;go()};$('#role').onchange=e=>{role=e.target.value;col=LK(role)?pc:'All';go()};boot();
+fetchSupabaseUsers();
 </script></body></html>

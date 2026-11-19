@@ -6,7 +6,7 @@
 <script>
   const SUPABASE_URL = 'https://ykblypchtapakwfxmleo.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_BRWu9PugcmA0-grFfdlYsg_5OqDDvBY';
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const supabase = window.supabase.createClient('https://ykblypchtapakwfxmleo.supabase.co', 'sb_publishable_BRWu9PugcmA0-grFfdlYsg_5OqDDvBY');
 </script>stem</title>
 <style>
 :root{--bg:#eaf0f6;--cd:#fff;--tx:#14213d;--mu:#56627f;--bd:#d3dcea;--ac:#1e90ff;--ac2:#2a3aa8;--tl:#1a5f7a;--sb:#124b63;--ok:#1b9a6b;--wn:#c98a00;--bad:#c93c3c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -283,18 +283,13 @@ function resetIdle(){clearTimeout(idle);idle=setTimeout(()=>logout('Signed out a
 const lgDemo=()=>{$('#ld').innerHTML=U.filter(u=>u.a).map((u,i)=>`<button class="b g" onclick="$('#em').value=U[${U.indexOf(u)}].e">${esc(u.r)}${u.c?' '+esc(u.c):''}</button>`).join('')};
 function boot(){try{const t=localStorage.getItem('iurdas-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}$('#lgi').src=document.querySelector('.brand img').src;$('#th').textContent=$('#th2').textContent=thLabel();lgDemo();['click','keydown','touchstart'].forEach(v=>document.addEventListener(v,()=>{if(cu)resetIdle()}));try{const u=U.find(x=>x.e==sessionStorage.getItem('iurdas-sess')&&x.a);if(u){cu=u;signIn(u)}}catch(e){}}
 const admins=()=>U.filter(u=>u.r=='System Administrator'&&u.a).length;
-// Fetch users from Supabase and update your app's user list
 async function fetchSupabaseUsers() {
-  const { data, error } = await supabase.from('users').select('*');
+  const { data, error } = await supabaseClient.from('users').select('*');
   if (error) {
     console.error('Error fetching users from Supabase:', error.message);
     return;
   }
-  if (data && data.length > 0) {
-    // Maps Supabase users into your app's expected format
-    window.USERS = data.map(u => [u.name, u.email, u.role]);
-    if (typeof setU === 'function') setU(); // Re-renders your user table if function exists
-  }
+  console.log('Loaded Supabase users:', data);
 }
 function setU(i,k,v){const u=U[i];if((k=='a'&&!+v||k=='r'&&v!='System Administrator')&&u.r=='System Administrator'&&u.a&&admins()<=1)return toast('Keep at least one active System Administrator.');u[k]=k=='a'?+v:v;if(k=='r'&&LK(v)&&!u.c)u.c='CST';audit('Updated '+esc(u.e)+': '+k+' = '+esc(v));go()}
 function delU(i){const u=U[i];if(u==cu)return toast('You cannot remove your own account.');if(u.r=='System Administrator'&&admins()<=1)return toast('Keep at least one active System Administrator.');U.splice(i,1);audit('Removed '+esc(u.e));go()}

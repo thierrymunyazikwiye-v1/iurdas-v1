@@ -43,6 +43,9 @@ pre{white-space:pre-wrap;background:var(--bg);padding:10px;border-radius:8px;fon
 #toast{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--tl);color:#fff;padding:10px 14px;border-radius:8px;display:none;max-width:340px;z-index:9}
 .note{color:var(--mu);font-size:12px}
 #lg{position:fixed;inset:0;z-index:20;background:var(--bg);display:none;align-items:center;justify-content:center;padding:16px}body.lk #lg{display:flex}body.lk aside,body.lk main{display:none}#lg input{width:100%}</style></head><body class="lk"><div id="lg"><div class="c" style="max-width:420px;width:100%"><div style="text-align:center"><img id="lgi" alt="University of Rwanda logo" style="width:72px;height:72px;border-radius:50%;background:#fff"><h1 style="margin:8px 0 0">iURDAS</h1><div class="note">Integrated University of Rwanda Data Analytics System</div></div>
+</style>
+</head>
+<body>
 <p><label class="note">UR email (@ur.ac.rw)</label><br><input id="em" type="email" autocomplete="username" placeholder="name@ur.ac.rw" style="width:100%"></p><p><label class="note">Password</label><br><input id="pw" type="password" autocomplete="current-password" style="width:100%" onkeydown="if(event.key=='Enter')login()"></p>
 <p><button class="b" style="width:100%" onclick="login()">Sign in</button></p><div id="lm" class="dn" role="alert"></div><p class="note"><button class="b g" id="th2" onclick="toggleTheme()"></button></p>
 <details><summary class="note">Demo accounts (pre-registered)</summary><div id="ld" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px"></div><p class="note">Demo mode accepts any password for registered @ur.ac.rw accounts. Production uses UR single sign-on with multi-factor authentication.</p></details></div></div>
